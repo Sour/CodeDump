@@ -4,9 +4,15 @@
 
 using namespace std;
 
+sf::Vector2f gravity(sf::Vector2f tempVector){
+	tempVector.y = tempVector.y + 5;
+	return tempVector;
+}
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Code Dump");
+	window.setVerticalSyncEnabled(true);
 
     while (window.isOpen())
     {
@@ -44,9 +50,19 @@ int main()
 
 			case sf::Event::MouseButtonPressed:
 				if (event.mouseButton.button == sf::Mouse::Right){
+
 					cout << "the right button was pressed"     << endl;
 					cout << "mouse x: " << event.mouseButton.x << endl;
 					cout << "mouse y: " << event.mouseButton.y << endl;
+					sf::CircleShape circle(5);
+					circle.setPosition(event.mouseButton.x, event.mouseButton.y);
+					sf::Vector2f tempv = circle.getPosition();
+					for(int i = 0; tempv.y < 800; i++){
+						tempv.y += 5;
+						circle.setPosition(tempv);
+						window.draw(circle);
+						cout << tempv.y << endl;
+					}
 				}
 
 				if (event.mouseButton.button == sf::Mouse::Left){
