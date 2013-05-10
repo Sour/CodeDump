@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
+#include "PlayerBlock.h"
 
 class Game {
 
@@ -18,4 +19,5 @@ private:
 
 	static GameState _gameState;
 	static sf::RenderWindow _mainWindow;
+	static PlayerBlock _player1;
 };

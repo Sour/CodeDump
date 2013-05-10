@@ -9,6 +9,10 @@ void Game::Start(void){
 		return;
 
 	_mainWindow.create(sf::VideoMode(1024,768,32),"Gravity");
+
+	_player1.Load("images/block.png");
+	_player1.SetPosition((1024/2)-45,700);
+
 	_gameState = Game::ShowingSplashScreen;
 
 	while(!IsExiting()){
@@ -49,9 +53,7 @@ void Game::showSplashScreen() {
 
 void Game::GameLoop(){
 
-	sf::Event currentEvent;
 	
-	while(_mainWindow.pollEvent(currentEvent)){
 
 		switch(_gameState){
 
@@ -64,18 +66,27 @@ void Game::GameLoop(){
 			break;
 
 		case Game::Playing:
-			_mainWindow.clear(sf::Color(0,0,0));
-			_mainWindow.display();
 
-			if(currentEvent.type == sf::Event::Closed){
-				_gameState = Game::Exiting;
+			sf::Event currentEvent;
+	
+			while(_mainWindow.pollEvent(currentEvent)){
+
+				_mainWindow.clear(sf::Color(0,0,0));
+				_player1.Draw(_mainWindow);
+				_mainWindow.display();
+
+				if(currentEvent.type == sf::Event::Closed)
+					_gameState = Game::Exiting;
+
+				if(currentEvent.type == sf::Event::KeyPressed) {
+					if(currentEvent.key.code == sf::Keyboard::Escape)
+						showMenu();
+				}
 			}
-
 			break;
-
 		}
-	}
 }
 
 Game::GameState Game::_gameState = Uninitialized;
 sf::RenderWindow Game::_mainWindow;
+PlayerBlock Game::_player1;
