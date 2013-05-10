@@ -12,6 +12,7 @@ private:
 	static void GameLoop();
 
 	static void showSplashScreen();
+	static void showMenu();
 
 	enum GameState { Uninitialized, Playing, ShowingSplashScreen, Exiting };
 

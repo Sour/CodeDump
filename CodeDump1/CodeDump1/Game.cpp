@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "Splash.h"
+#include "Menu.h"
 
 void Game::Start(void){
 
@@ -25,10 +26,15 @@ bool Game::IsExiting(){
 			return false;
 }
 
+void Game::showMenu(){
+	MainMenu mainMenu;
+
+}
+
 void Game::showSplashScreen() {
 	Splash splashScreen;
 	splashScreen.Show(_mainWindow);
-	_gameState = Game::Playing;
+	_gameState = Game::ShowingMenu;
 }
 
 void Game::GameLoop(){
@@ -38,6 +44,10 @@ void Game::GameLoop(){
 	while(_mainWindow.pollEvent(currentEvent)){
 
 		switch(_gameState){
+
+		case Game::ShowingMenu:
+			showMenu();
+			break;
 
 		case Game::ShowingSplashScreen:
 			showSplashScreen();
