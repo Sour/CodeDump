@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="PlayerBlock.h" />
     <ClInclude Include="Splash.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="VisibleGameObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Menu.cpp" />
