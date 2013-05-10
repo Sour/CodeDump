@@ -4,7 +4,7 @@
 void Splash::Show(sf::RenderWindow & renderWindow) {
 
 	sf::Texture texture;
-	if(texture.loadFromFile("Image/Splash.png") != true) {
+	if(texture.loadFromFile("images/Splash.png") != true) {
 		std::cout << "Failed to load Image." << std::endl;
 		return;
 	}

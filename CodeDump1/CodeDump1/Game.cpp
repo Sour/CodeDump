@@ -28,7 +28,17 @@ bool Game::IsExiting(){
 
 void Game::showMenu(){
 	MainMenu mainMenu;
+	MainMenu::MenuResult result = mainMenu.Show(_mainWindow);
+	switch(result) {
 
+	case MainMenu::Exit:
+		_gameState = Game::Exiting;
+		break;
+
+	case MainMenu::Play:
+		_gameState = Game::Playing;
+		break;
+	}
 }
 
 void Game::showSplashScreen() {
