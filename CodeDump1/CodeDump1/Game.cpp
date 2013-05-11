@@ -11,10 +11,10 @@ void Game::Start(void){
 	_mainWindow.create(sf::VideoMode(1024,768,32),"Gravity");
 
 	PlayerBlock *player = new PlayerBlock();
-	player->Load("images/block.png");
-	player->SetPosition((1024/2)-45, 700);
+	player->load("images/block.png");
+	player->setPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT / 2);
 
-	_gameObjectManager.Add("Block1", player);
+	_gameObjectManager.add("Block1", player);
 	_gameState = Game::ShowingSplashScreen;
 
 	while(!IsExiting()){
@@ -24,8 +24,6 @@ void Game::Start(void){
 	_mainWindow.close();
 }
 
-
-
 bool Game::IsExiting(){
 
 		if(_gameState == Game::Exiting)
@@ -34,26 +32,17 @@ bool Game::IsExiting(){
 			return false;
 }
 
-void Game::showMenu(){
-	MainMenu mainMenu;
-	MainMenu::MenuResult result = mainMenu.Show(_mainWindow);
-	switch(result) {
 
-	case MainMenu::Exit:
-		_gameState = Game::Exiting;
-		break;
-
-	case MainMenu::Play:
-		_gameState = Game::Playing;
-		break;
-	}
+sf::RenderWindow& Game::getWindow() {
+	return _mainWindow;
 }
 
-void Game::showSplashScreen() {
-	Splash splashScreen;
-	splashScreen.Show(_mainWindow);
-	_gameState = Game::ShowingMenu;
+const sf::Event& Game::getInput() {
+	sf::Event currentEvent;
+	_mainWindow.pollEvent(currentEvent);
+	return currentEvent;
 }
+
 
 void Game::GameLoop(){
 
@@ -75,7 +64,8 @@ void Game::GameLoop(){
 
 			_mainWindow.clear(sf::Color(0,0,0));
 			
-			_gameObjectManager.DrawAll(_mainWindow);
+			_gameObjectManager.updateAll();
+			_gameObjectManager.drawAll(_mainWindow);
 
 			_mainWindow.display();
 
@@ -87,6 +77,27 @@ void Game::GameLoop(){
 			
 			break;
 		}
+}
+
+void Game::showMenu(){
+	MainMenu mainMenu;
+	MainMenu::MenuResult result = mainMenu.Show(_mainWindow);
+	switch(result) {
+
+	case MainMenu::Exit:
+		_gameState = Game::Exiting;
+		break;
+
+	case MainMenu::Play:
+		_gameState = Game::Playing;
+		break;
+	}
+}
+
+void Game::showSplashScreen() {
+	Splash splashScreen;
+	splashScreen.Show(_mainWindow);
+	_gameState = Game::ShowingMenu;
 }
 
 Game::GameState Game::_gameState = Uninitialized;

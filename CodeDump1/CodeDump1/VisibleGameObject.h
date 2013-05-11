@@ -6,15 +6,21 @@ public:
 	VisibleGameObject();
 	virtual ~VisibleGameObject();
 
-	virtual void Load(std::string filename);
-	virtual void Draw(sf::RenderWindow& window);
+	virtual void load(std::string filename);
+	virtual void draw(sf::RenderWindow& window);
+	virtual void update(float elapsedTime);
 
-	virtual void SetPosition(float x, float y);
+	virtual void setPosition(float x, float y);
+	virtual sf::Vector2f getPosition() const;
+	virtual bool isLoaded() const;
+
+protected:
+	sf::Sprite& getSprite();
 
 private:
 	sf::Sprite _sprite;
 	sf::Texture _texture;
 	std::string _filename;
 	bool _isLoaded;
-
+	 
 };

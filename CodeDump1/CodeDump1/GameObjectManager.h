@@ -7,15 +7,20 @@ public:
 	GameObjectManager();
 	~GameObjectManager();
 
-	void Add(std::string name, VisibleGameObject* gameObject);
-	void Remove(std::string name);
+	void add(std::string name, VisibleGameObject* gameObject);
+	void remove(std::string name);
+	void updateAll();
+
 	int getObjectCount() const;
+	
 	VisibleGameObject* Get(std::string name) const;
 
-	void DrawAll(sf::RenderWindow& renderWindow);
+	void drawAll(sf::RenderWindow& renderWindow);
 
 private:
 	std::map<std::string, VisibleGameObject*> _gameObject;
+
+	sf::Clock clock;
 
 	struct GameObjectDeallocator {
 		void operator() (const std::pair<std::string, VisibleGameObject*> & p) const {
