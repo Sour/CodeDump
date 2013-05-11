@@ -10,9 +10,11 @@ void Game::Start(void){
 
 	_mainWindow.create(sf::VideoMode(1024,768,32),"Gravity");
 
-	_player1.Load("images/block.png");
-	_player1.SetPosition((1024/2)-45,700);
+	PlayerBlock *player = new PlayerBlock();
+	player->Load("images/block.png");
+	player->SetPosition((1024/2)-45, 700);
 
+	_gameObjectManager.Add("Block1", player);
 	_gameState = Game::ShowingSplashScreen;
 
 	while(!IsExiting()){
@@ -21,6 +23,8 @@ void Game::Start(void){
 
 	_mainWindow.close();
 }
+
+
 
 bool Game::IsExiting(){
 
@@ -53,7 +57,8 @@ void Game::showSplashScreen() {
 
 void Game::GameLoop(){
 
-	
+	sf::Event currentEvent;
+	_mainWindow.pollEvent(currentEvent);
 
 		switch(_gameState){
 
@@ -67,26 +72,23 @@ void Game::GameLoop(){
 
 		case Game::Playing:
 
-			sf::Event currentEvent;
-	
-			while(_mainWindow.pollEvent(currentEvent)){
 
-				_mainWindow.clear(sf::Color(0,0,0));
-				_player1.Draw(_mainWindow);
-				_mainWindow.display();
+			_mainWindow.clear(sf::Color(0,0,0));
+			
+			_gameObjectManager.DrawAll(_mainWindow);
 
-				if(currentEvent.type == sf::Event::Closed)
-					_gameState = Game::Exiting;
+			_mainWindow.display();
 
-				if(currentEvent.type == sf::Event::KeyPressed) {
-					if(currentEvent.key.code == sf::Keyboard::Escape)
-						showMenu();
-				}
-			}
+			if(currentEvent.type == sf::Event::Closed)
+				_gameState = Game::Exiting;
+
+			if(currentEvent.type == sf::Event::KeyPressed && currentEvent.key.code == sf::Keyboard::Escape) 
+				showMenu();
+			
 			break;
 		}
 }
 
 Game::GameState Game::_gameState = Uninitialized;
 sf::RenderWindow Game::_mainWindow;
-PlayerBlock Game::_player1;
+GameObjectManager Game::_gameObjectManager;
