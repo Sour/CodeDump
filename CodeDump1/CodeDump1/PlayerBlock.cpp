@@ -2,8 +2,9 @@
 #include "PlayerBlock.h"
 #include "Game.h"
 
+#define PI 3.14159265
 
-PlayerBlock::PlayerBlock() : _velocity(0), _maxVelocity(1000.0f) {
+PlayerBlock::PlayerBlock() : _velocity(0), _maxVelocity(750.0f), _elapsedTimeSinceStart(0.0f), _angle(0.01f) {
 	load("images/block.png");
 	assert(isLoaded());
 
@@ -13,13 +14,26 @@ PlayerBlock::PlayerBlock() : _velocity(0), _maxVelocity(1000.0f) {
 PlayerBlock::~PlayerBlock() {
 }
 
-void PlayerBlock::update(float elapsedTime) {
+void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) 
-		_velocity -= 3.0f;
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		_velocity += 3.0f;
+	if(elapsedTime != _elapsedTimeSinceStart) {
+		_velocity *= .9997;
+		std::cout << _velocity << std::endl;
+		_elapsedTimeSinceStart += elapsedTime;
+	}
+	
+	
+	sf::Vector2f pos = this->getPosition();
+
+	if(sf::Mouse::getPosition(renderWindow).x > pos.x + (getSprite().getLocalBounds().width / 2))
+		_velocity += 1.0f;
+		
+	if(sf::Mouse::getPosition(renderWindow).x < pos.x - (getSprite().getLocalBounds().width / 2))
+		_velocity -= 1.0f;
+
+	if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
+		_velocity = 0;
 
 	if(_velocity > _maxVelocity)
 		_velocity = _maxVelocity;
@@ -27,7 +41,6 @@ void PlayerBlock::update(float elapsedTime) {
 	if(_velocity < -_maxVelocity)
 		_velocity = -_maxVelocity;
 
-	sf::Vector2f pos = this->getPosition();
 
 	if(pos.x < getSprite().getLocalBounds().width / 2 || 
 		pos.x > (Game::SCREEN_WIDTH - getSprite().getLocalBounds().width / 2)) 
@@ -44,3 +57,19 @@ float PlayerBlock::getVelocity() const {
 	return _velocity;
 }
 
+void PlayerBlock::setRotation() {
+
+}
+
+float PlayerBlock::linearVelocityX(float angle) {
+	angle -= 90;
+	if(angle < 0) angle = 360 + angle;
+		return (float)std::cos( angle * ( PI / 180.0f ));
+
+}
+
+float PlayerBlock::linearVelocityY(float angle) {
+	angle -= 90;
+	if(angle < 0) angle = 360 + angle;
+		return (float)std::sin( angle * ( PI / 180.0f ));
+}

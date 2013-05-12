@@ -22,13 +22,13 @@ void GameObjectManager::remove(std::string name) {
 	}
 }
 
-void GameObjectManager::updateAll() {
+void GameObjectManager::updateAll(sf::RenderWindow& renderWindow) {
 	std::map<std::string, VisibleGameObject*>::const_iterator itr = _gameObject.begin();
 
 	float timeDelta = clock.restart().asSeconds();
 
 	while(itr != _gameObject.end()) {
-		itr->second->update(timeDelta);
+		itr->second->update(renderWindow, timeDelta);
 		itr++;
 	}
 

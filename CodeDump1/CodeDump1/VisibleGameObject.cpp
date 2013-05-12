@@ -23,7 +23,7 @@ void VisibleGameObject::draw(sf::RenderWindow& window){
 		window.draw(_sprite);
 }
 
-void VisibleGameObject::update(float elapsedTime) {
+void VisibleGameObject::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 
 }
 

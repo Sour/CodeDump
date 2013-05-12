@@ -8,9 +8,10 @@ public:
 
 	virtual void load(std::string filename);
 	virtual void draw(sf::RenderWindow& window);
-	virtual void update(float elapsedTime);
+	virtual void update(sf::RenderWindow& renderWindow, float elapsedTime);
 
 	virtual void setPosition(float x, float y);
+	virtual void setRotation();
 	virtual sf::Vector2f getPosition() const;
 	virtual bool isLoaded() const;
 

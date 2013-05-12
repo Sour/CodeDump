@@ -64,7 +64,7 @@ void Game::GameLoop(){
 
 			_mainWindow.clear(sf::Color(0,0,0));
 			
-			_gameObjectManager.updateAll();
+			_gameObjectManager.updateAll(_mainWindow);
 			_gameObjectManager.drawAll(_mainWindow);
 
 			_mainWindow.display();
