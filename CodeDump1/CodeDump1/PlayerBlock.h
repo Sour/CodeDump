@@ -11,11 +11,14 @@ public:
 	void update(sf::RenderWindow& renderWindow, float elapsedTime);
 	void draw(sf::RenderWindow& renderWindow);
 
-	float getVelocity() const;
+	float getVelocityX() const;
+	float getVelocityY() const;
+
 
 private:
 	float _angle;
-	float _velocity;
+	float _xVelocity;
+	float _yVelocity;
 	float _maxVelocity;
 	float _elapsedTimeSinceStart;
 

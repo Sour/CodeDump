@@ -4,7 +4,7 @@
 
 #define PI 3.14159265
 
-PlayerBlock::PlayerBlock() : _velocity(0), _maxVelocity(750.0f), _elapsedTimeSinceStart(0.0f), _angle(0.01f) {
+PlayerBlock::PlayerBlock() : _xVelocity(0), _yVelocity(0), _maxVelocity(750.0f), _elapsedTimeSinceStart(0.0f), _angle(0.01f) {
 	load("images/block.png");
 	assert(isLoaded());
 
@@ -18,58 +18,63 @@ void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 
 
 	if(elapsedTime != _elapsedTimeSinceStart) {
-		_velocity *= .9997;
-		std::cout << _velocity << std::endl;
+		_xVelocity *= .9997;
+		_yVelocity *= .9991;
 		_elapsedTimeSinceStart += elapsedTime;
 	}
-	
-	
+		
 	sf::Vector2f pos = this->getPosition();
 
-	if(sf::Mouse::getPosition(renderWindow).x > pos.x + (getSprite().getLocalBounds().width / 2))
-		_velocity += 1.0f;
-		
-	if(sf::Mouse::getPosition(renderWindow).x < pos.x - (getSprite().getLocalBounds().width / 2))
-		_velocity -= 1.0f;
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		getSprite().rotate(-.05f);
 
-	if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
-		_velocity = 0;
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		getSprite().rotate(.05f);
 
-	if(_velocity > _maxVelocity)
-		_velocity = _maxVelocity;
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+		_xVelocity += 1.0f;
+		_yVelocity += 1.0f;
+	}
 
-	if(_velocity < -_maxVelocity)
-		_velocity = -_maxVelocity;
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+		_xVelocity -= 1.0f;
+		_yVelocity -= 1.0f;
+	}
 
+	if(_xVelocity > _maxVelocity || _yVelocity > _maxVelocity){
+		_xVelocity = _maxVelocity;
+		_yVelocity = _maxVelocity;
+	}
+
+	if(_xVelocity < -_maxVelocity || _yVelocity < -_maxVelocity) {
+		_xVelocity =  -_maxVelocity;
+		_yVelocity = -_maxVelocity;
+	}
 
 	if(pos.x < getSprite().getLocalBounds().width / 2 || 
-		pos.x > (Game::SCREEN_WIDTH - getSprite().getLocalBounds().width / 2)) 
-			_velocity = -_velocity;
-
-	getSprite().move(_velocity * elapsedTime, 0);
+		pos.x > (Game::SCREEN_WIDTH - getSprite().getLocalBounds().width / 2)) {
+			_xVelocity = -_xVelocity;
+	}
+	getSprite().move((linearVelocityX(getSprite().getRotation()) * _xVelocity) * elapsedTime, 
+					 (linearVelocityY(getSprite().getRotation()) * -_xVelocity) * elapsedTime);
 }
 
 void PlayerBlock::draw(sf::RenderWindow& renderWindow) {
 	VisibleGameObject::draw(renderWindow);
 }
 
-float PlayerBlock::getVelocity() const {
-	return _velocity;
+float PlayerBlock::getVelocityX() const {
+	return _xVelocity;
 }
 
-void PlayerBlock::setRotation() {
-
+float PlayerBlock::getVelocityY() const {
+	return _yVelocity;
 }
 
 float PlayerBlock::linearVelocityX(float angle) {
-	angle -= 90;
-	if(angle < 0) angle = 360 + angle;
-		return (float)std::cos( angle * ( PI / 180.0f ));
-
+	return (float)std::cos( angle );
 }
 
 float PlayerBlock::linearVelocityY(float angle) {
-	angle -= 90;
-	if(angle < 0) angle = 360 + angle;
-		return (float)std::sin( angle * ( PI / 180.0f ));
+	return (float)std::sin( angle );
 }
