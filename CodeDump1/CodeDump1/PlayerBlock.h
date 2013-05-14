@@ -11,19 +11,15 @@ public:
 	void update(sf::RenderWindow& renderWindow, float elapsedTime);
 	void draw(sf::RenderWindow& renderWindow);
 
-	float getVelocityX() const;
-	float getVelocityY() const;
-
-
 private:
-	float _angle;
-	float _xVelocity;
-	float _yVelocity;
+	sf::Vector2f _velocity;
+	sf::Vector2f _force;
+
 	float _maxVelocity;
 	float _elapsedTimeSinceStart;
 
-	float linearVelocityX(float angle);
-	float linearVelocityY(float angle);
+	void linearVelocity();
+	void updateVelocity();
 
 };
 

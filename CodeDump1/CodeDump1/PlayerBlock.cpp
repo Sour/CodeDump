@@ -4,7 +4,7 @@
 
 #define PI 3.14159265
 
-PlayerBlock::PlayerBlock() : _xVelocity(0), _yVelocity(0), _maxVelocity(750.0f), _elapsedTimeSinceStart(0.0f), _angle(0.01f) {
+PlayerBlock::PlayerBlock() : _velocity(0,0), _maxVelocity(750.0f), _elapsedTimeSinceStart(0.0f) {
 	load("images/block.png");
 	assert(isLoaded());
 
@@ -16,65 +16,119 @@ PlayerBlock::~PlayerBlock() {
 
 void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 
+	sf::Vector2f pos = this->getPosition();
+	sf::Vector2f force;
 
 	if(elapsedTime != _elapsedTimeSinceStart) {
-		_xVelocity *= .9997;
-		_yVelocity *= .9991;
+		if( ((getSprite().getLocalBounds().height / 2) + getSprite().getPosition().y) < 768 ) 
+			_velocity.y += .25;
+		
+		
+		_velocity.x *= .9997;
+		_velocity.y *= .9991;
 		_elapsedTimeSinceStart += elapsedTime;
 	}
-		
-	sf::Vector2f pos = this->getPosition();
+	
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::F5))
+		getSprite().setPosition(1024/2, 768 / 2);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		getSprite().rotate(-.05f);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		getSprite().rotate(-.05f);/*
+		updateVelocity();*/
+	}
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		getSprite().rotate(.05f);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		getSprite().rotate(.05f);/*
+		updateVelocity();*/
+	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-		_xVelocity += 1.0f;
-		_yVelocity += 1.0f;
+		linearVelocity();
+		_velocity += _force;
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-		_xVelocity -= 1.0f;
-		_yVelocity -= 1.0f;
-	}
-
-	if(_xVelocity > _maxVelocity || _yVelocity > _maxVelocity){
-		_xVelocity = _maxVelocity;
-		_yVelocity = _maxVelocity;
-	}
-
-	if(_xVelocity < -_maxVelocity || _yVelocity < -_maxVelocity) {
-		_xVelocity =  -_maxVelocity;
-		_yVelocity = -_maxVelocity;
+		linearVelocity();
+		_velocity -= _force;
 	}
 
 	if(pos.x < getSprite().getLocalBounds().width / 2 || 
-		pos.x > (Game::SCREEN_WIDTH - getSprite().getLocalBounds().width / 2)) {
-			_xVelocity = -_xVelocity;
-	}
-	getSprite().move((linearVelocityX(getSprite().getRotation()) * _xVelocity) * elapsedTime, 
-					 (linearVelocityY(getSprite().getRotation()) * -_xVelocity) * elapsedTime);
+		pos.x > (Game::SCREEN_WIDTH - getSprite().getLocalBounds().width / 2)) 
+		_velocity.x = -_velocity.x;
+	
+	if(pos.y < getSprite().getLocalBounds().height / 2 || 
+		pos.y > (Game::SCREEN_HEIGHT - getSprite().getLocalBounds().height / 2))
+		_velocity.y = -_velocity.y;
+
+	if( _velocity.x > _maxVelocity )
+		_velocity.x = _maxVelocity;
+
+	if( _velocity.y > _maxVelocity )
+		_velocity.y = _maxVelocity;
+
+	getSprite().move(_velocity * elapsedTime);
 }
 
 void PlayerBlock::draw(sf::RenderWindow& renderWindow) {
 	VisibleGameObject::draw(renderWindow);
 }
 
-float PlayerBlock::getVelocityX() const {
-	return _xVelocity;
+
+void PlayerBlock::linearVelocity() {
+
+	double angle = getSprite().getRotation() * PI / 180;
+	_force.x = std::cos( angle );
+	_force.y = std::sin( angle );
 }
 
-float PlayerBlock::getVelocityY() const {
-	return _yVelocity;
-}
+void PlayerBlock::updateVelocity() {
 
-float PlayerBlock::linearVelocityX(float angle) {
-	return (float)std::cos( angle );
-}
+	int itr = 1;
+	double angle = getSprite().getRotation();
 
-float PlayerBlock::linearVelocityY(float angle) {
-	return (float)std::sin( angle );
+	while(getSprite().getRotation() > 90) {
+		angle -= 90;
+		itr++;
+	}
+
+	switch(itr) {
+	case 1:
+		
+	_force.x = std::cos( angle );
+	_force.y = 1 * std::sin( angle );
+
+
+	case 2:
+		
+	_force.x = -std::cos( angle );
+	_force.y = 1 * std::sin( angle );
+
+
+	case 3:
+		
+	_force.x = -std::cos( angle );
+	_force.y = -1 * std::sin( angle );
+
+
+	case 4:
+
+	_force.x = std::cos( angle );
+	_force.y = -1 * std::sin( angle );
+
+
+	default:
+		break;
+	}
+	
+
+	double totalVelocity = sqrt( (_velocity.x*_velocity.x) + (_velocity.y*_velocity.y) );
+
+	std::cout << "x: " <<  _velocity.x << " y: " << _velocity.y << " Angle: " << angle << " tv: " << totalVelocity << std::endl;
+	angle = 90 - angle;
+	_velocity.x = ( totalVelocity * std::sin( angle ));
+	_velocity.y = ( totalVelocity * std::cos( angle ));
+	
+	std::cout << "2x: " <<  _velocity.x << " y: " << _velocity.y << " Angle: " << angle << " tv: " << totalVelocity << std::endl;
+
+
 }
