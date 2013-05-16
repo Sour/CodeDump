@@ -4,13 +4,14 @@
 
 #define PI 3.14159265
 #define G 9.81
-#define thrust 50
+#define THRUST 75
 
-PlayerBlock::PlayerBlock() : _velocity(0,0), _maxVelocity(750.0f) {
+PlayerBlock::PlayerBlock() : _velocity(0,0), _maxVelocity(250.0f) {
 	load("images/block.png");
 	assert(isLoaded());
 
 	getSprite().setOrigin(getSprite().getLocalBounds().width / 2, getSprite().getLocalBounds().height / 2);
+	getSprite().setScale(.5,.5);
 }
 
 PlayerBlock::~PlayerBlock() {
@@ -26,14 +27,24 @@ void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-		linearVelocity();
+		linearVelocity(elapsedTime);
 		_velocity += _force;
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-		linearVelocity();
+		linearVelocity(elapsedTime);
 		_velocity *= .9998f;
 	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		getSprite().rotate(-.05f);
+	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		getSprite().rotate(.05f);
+	}
+
+
 
 	if(pos.x < getSprite().getLocalBounds().width / 2 || 
 		pos.x > (Game::SCREEN_WIDTH - getSprite().getLocalBounds().width / 2)) 
@@ -57,11 +68,14 @@ void PlayerBlock::draw(sf::RenderWindow& renderWindow) {
 	VisibleGameObject::draw(renderWindow);
 }
 
-void PlayerBlock::linearVelocity() {
+void PlayerBlock::linearVelocity(float dt) {
 
 	double angle = getSprite().getRotation() * PI / 180;
-	_force.x = std::cos( angle );
-	_force.y = std::sin( angle );
+
+	_force.x = std::cos( angle ) * dt * THRUST;
+	_force.y = std::sin( angle ) * dt * THRUST;
+	
+	std::cout << _force.x << " " << _force.y << "\n";
 }
 
 

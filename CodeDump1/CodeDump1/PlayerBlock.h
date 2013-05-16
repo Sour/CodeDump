@@ -22,7 +22,7 @@ private:
 
 	float _maxVelocity;
 
-	void linearVelocity();
+	void linearVelocity(float dt);
 	void gravity(float elapsedTime);
 };
 

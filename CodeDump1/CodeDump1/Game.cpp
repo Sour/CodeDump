@@ -7,9 +7,7 @@ void Game::Start(void){
 
 	if(_gameState != Uninitialized)
 		return;
-
 	_mainWindow.create(sf::VideoMode(1024,768,32),"Gravity");
-
 	PlayerBlock *player = new PlayerBlock();
 	player->load("images/block.png");
 	player->setPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT / 2);
@@ -48,6 +46,7 @@ void Game::GameLoop(){
 
 	sf::Event currentEvent;
 	_mainWindow.pollEvent(currentEvent);
+	
 
 		switch(_gameState){
 
