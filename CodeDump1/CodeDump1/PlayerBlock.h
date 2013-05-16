@@ -4,16 +4,6 @@
 class PlayerBlock :
 
 	public VisibleGameObject {
-		
-	struct State {
-		float x;
-		float v;
-	};
-
-	static struct Derivative {
-		float dx;
-		float dv;
-	};
 
 public:
 	PlayerBlock();
@@ -31,9 +21,8 @@ private:
 	sf::Vector2f _force;
 
 	float _maxVelocity;
-	float _elapsedTimeSinceStart;
 
 	void linearVelocity();
-	Derivative evaluate(const State &initial, float t, float dt, const Derivative &d);
+	void gravity(float elapsedTime);
 };
 
