@@ -4,6 +4,22 @@
 
 #define PI 3.14159265
 
+struct State {
+	float x;
+	float v;
+};
+
+struct Derivative {
+	float dx;
+	float dv;
+};
+
+float acceleration(const State &state, float t) {
+	const float k = 10;
+	const float b = 1;
+	return -k * state.x - b * state.v;
+}
+
 PlayerBlock::PlayerBlock() : _velocity(0,0), _maxVelocity(750.0f), _elapsedTimeSinceStart(0.0f) {
 	load("images/block.png");
 	assert(isLoaded());
@@ -19,32 +35,17 @@ void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 	sf::Vector2f pos = this->getPosition();
 	sf::Vector2f force;
 
-	if(elapsedTime != _elapsedTimeSinceStart) {
-		if( ((getSprite().getLocalBounds().height / 2) + getSprite().getPosition().y) < 768 ) 
-			_velocity.y += .25;
-		
-		
-		_velocity.x *= .9997;
-		_velocity.y *= .9991;
-		_elapsedTimeSinceStart += elapsedTime;
-	}
-	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::F5))
 		getSprite().setPosition(1024/2, 768 / 2);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		getSprite().rotate(-.05f);/*
-		updateVelocity();*/
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		getSprite().rotate(.05f);/*
-		updateVelocity();*/
-	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-		linearVelocity();
-		_velocity += _force;
+		State state; 
+		state.x = getSprite().getPosition().x;
+		state.v = 0;
+
+		float t = 0;
+		float dt = elapsedTime;
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
@@ -73,7 +74,6 @@ void PlayerBlock::draw(sf::RenderWindow& renderWindow) {
 	VisibleGameObject::draw(renderWindow);
 }
 
-
 void PlayerBlock::linearVelocity() {
 
 	double angle = getSprite().getRotation() * PI / 180;
@@ -81,54 +81,27 @@ void PlayerBlock::linearVelocity() {
 	_force.y = std::sin( angle );
 }
 
-void PlayerBlock::updateVelocity() {
+Derivative evaluate(const State &initial, float t, float dt, const Derivative &d) {
+	State state;
+	state.x = initial.x + d.dx * dt;
+	state.v = initial.v + d.dv * dt;
 
-	int itr = 1;
-	double angle = getSprite().getRotation();
+	Derivative output;
+	output.dx = state.v;
+	output.dv = acceleration(state, t+dt);
+	return output;
+}
 
-	while(getSprite().getRotation() > 90) {
-		angle -= 90;
-		itr++;
-	}
+void integrate(State &state, float t, float dt){
+	Derivative a = evaluate(state, t, 0.0f, Derivative());
+	Derivative b = evaluate(state, t, dt*0.5f, a);
+	Derivative c = evaluate(state, t, dt*0.5f, b);
+	Derivative d = evaluate(state, t, dt, c);
 
-	switch(itr) {
-	case 1:
-		
-	_force.x = std::cos( angle );
-	_force.y = 1 * std::sin( angle );
+	const float dxdt = 1.0f/6.0f * (a.dx + 2.0f * (b.dx + c.dx) + d.dx);
+	const float dvdt = 1.0f / 6.0f * (a.dv + 2.0f * (b.dv + c.dv) + d.dv);
 
-
-	case 2:
-		
-	_force.x = -std::cos( angle );
-	_force.y = 1 * std::sin( angle );
-
-
-	case 3:
-		
-	_force.x = -std::cos( angle );
-	_force.y = -1 * std::sin( angle );
-
-
-	case 4:
-
-	_force.x = std::cos( angle );
-	_force.y = -1 * std::sin( angle );
-
-
-	default:
-		break;
-	}
-	
-
-	double totalVelocity = sqrt( (_velocity.x*_velocity.x) + (_velocity.y*_velocity.y) );
-
-	std::cout << "x: " <<  _velocity.x << " y: " << _velocity.y << " Angle: " << angle << " tv: " << totalVelocity << std::endl;
-	angle = 90 - angle;
-	_velocity.x = ( totalVelocity * std::sin( angle ));
-	_velocity.y = ( totalVelocity * std::cos( angle ));
-	
-	std::cout << "2x: " <<  _velocity.x << " y: " << _velocity.y << " Angle: " << angle << " tv: " << totalVelocity << std::endl;
-
+	state.x = state.x + dxdt * dt;
+	state.v = state.v + dvdt * dt;
 
 }
