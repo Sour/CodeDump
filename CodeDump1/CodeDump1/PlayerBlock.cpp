@@ -3,10 +3,10 @@
 #include "Game.h"
 
 #define PI 3.14159265
-#define G 29.43
-#define THRUST 150
+#define G 50
+#define THRUST 350
 
-PlayerBlock::PlayerBlock() : _velocity(0,0), _maxVelocity(250.0f) {
+PlayerBlock::PlayerBlock() : _velocity(0,0), _maxVelocity(750.0f) {
 	load("images/block.png");
 	assert(isLoaded());
 
@@ -22,23 +22,17 @@ void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 	sf::Vector2f pos = this->getPosition();
 	sf::Vector2f force;
 
-
-
-
-
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::F5))
 		getSprite().setPosition(1024 / 2, 15);
 
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		linearVelocity(elapsedTime);
-		_velocity += _force;
-	}
+	
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-		linearVelocity(elapsedTime);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		_velocity *= .9998f;
-	}
+	
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		getSprite().rotate(-.05f);
@@ -61,8 +55,14 @@ void PlayerBlock::update(sf::RenderWindow& renderWindow, float elapsedTime) {
 	if( _velocity.x > _maxVelocity )
 		_velocity.x = _maxVelocity;
 
+	if( _velocity.x < -_maxVelocity )
+		_velocity.x = -_maxVelocity;
+
 	if( _velocity.y > _maxVelocity )
 		_velocity.y = _maxVelocity;
+
+	if( _velocity.y < -_maxVelocity )
+		_velocity.y = -_maxVelocity;
 	
 	gravity(elapsedTime);
 	drag(elapsedTime);
@@ -79,6 +79,10 @@ void PlayerBlock::linearVelocity(float dt) {
 
 	_force.x = std::cos( angle ) * dt * THRUST;
 	_force.y = std::sin( angle ) * dt * THRUST;
+
+	_velocity += _force;
+	
+	std::cout << _velocity.y << " " << _velocity.x << "\n";
 }
 
 
@@ -95,5 +99,5 @@ void PlayerBlock::drag(float dt) {
 	if(angle < 0)
 		angle += 2 * PI;
 
-	std::cout << getSprite().getRotation() << " fd: " << fd << " heading: " << angle << "\n";
+	/*std::cout << getSprite().getRotation() << " fd: " << fd << " heading: " << angle << "\n";*/
 }
