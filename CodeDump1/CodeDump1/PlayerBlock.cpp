@@ -97,8 +97,9 @@ void PlayerBlock::drag(float dt) {
 
 	float vAng = atan2 (_velocity.y, _velocity.x) * 180 / PI;
 	float sAng = getSprite().getRotation();
-	if(sAng > 180 ) sAng -= 360;
-	
+	if(vAng < 0) vAng += 360;
+	float angle = vAng - sAng;
+
 
 	//cl is 2PI times angle of attack
 	//.00237 slug/ft - density of air(r)
@@ -111,7 +112,9 @@ void PlayerBlock::drag(float dt) {
 	//pressure factor = .00237 slug/ft
 	
 
-
-	 printf ("(x=%f, y=%f) is %f degrees, Sprite:%f\n", _velocity.x, _velocity.y, vAng , sAng);
+	//float lift = .5 * (2 * PI * (angle * PI / 180)) * (totalVelocity * totalVelocity) * 23;
+	float lift = .5 * .00237 * (totalVelocity * totalVelocity) * 23 * (2 * PI * (angle * PI / 180));
+	printf ("Attack: %f - Velocity: %f - Sprite: %f - lift: %f\n", angle, vAng , sAng, lift);
+	//printf ("(x=%f, y=%f) is %f degrees, Sprite:%f\n", _velocity.x, _velocity.y, vAng , sAng);
 	//std::cout << getSprite().getRotation() << " fd: " << fd << " heading: " << angle << "\n";
 }
