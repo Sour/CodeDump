@@ -95,9 +95,23 @@ void PlayerBlock::drag(float dt) {
 	float totalVelocity = std::sqrt( ( _velocity.x * _velocity.x ) + ( _velocity.y * _velocity.y ) );
 	float fd = .5 * (1.2 * 0.0310809502) * totalVelocity * .25 * 11;
 
-	float angle = std::atan2f(_velocity.x, _velocity.y);
-	if(angle < 0)
-		angle += 2 * PI;
+	float vAng = atan2 (_velocity.y, _velocity.x) * 180 / PI;
+	float sAng = getSprite().getRotation();
+	if(sAng > 180 ) sAng -= 360;
+	
 
-	/*std::cout << getSprite().getRotation() << " fd: " << fd << " heading: " << angle << "\n";*/
+	//cl is 2PI times angle of attack
+	//.00237 slug/ft - density of air(r)
+	//23.0 m^2 - 247.3 ft^2 - area (a)
+	//.5 * cl * r * v^2 * a = lift
+
+	//drag = pressure factor x velocit ^ 2 * wing area * drag factor
+	//drag factor = .25
+	//wing area = 23.0 or 247.3
+	//pressure factor = .00237 slug/ft
+	
+
+
+	 printf ("(x=%f, y=%f) is %f degrees, Sprite:%f\n", _velocity.x, _velocity.y, vAng , sAng);
+	//std::cout << getSprite().getRotation() << " fd: " << fd << " heading: " << angle << "\n";
 }
