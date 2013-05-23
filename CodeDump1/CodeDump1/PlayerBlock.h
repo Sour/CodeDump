@@ -20,9 +20,9 @@ private:
 	float _maxVelocity;
 
 	void linearVelocity(float dt);
+	void lift(float dt);
 	void gravity(float dt);
 	void drag(float dt);
-	void lift(float dt);
 	void resistance(float dt);
 
 };
