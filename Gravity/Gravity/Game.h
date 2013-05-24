@@ -6,7 +6,7 @@
 class Game 
 {
 public:
-	void start();
+	static void start();
 
 private:
 	static void gameLoop();

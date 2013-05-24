@@ -13,12 +13,26 @@ void Game::start(void)
 
 void Game::gameLoop()
 {
+	sf::Event currentEvent;
+	_mainWindow.pollEvent(currentEvent);
+
+	switch(_gameState)
+	{
+	case Game::Exiting:
+		break;
+	case Game::Uninitialized:
+		break;
+	case Game::Playing:
+		break;
+	default:
+		break;
+	}
 
 }
 
 bool Game::exiting()
 {
-	if(_gameState == Exiting)
+	if(_gameState == Game::Exiting)
 		return true;
 	return false;
 }
