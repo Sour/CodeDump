@@ -18,3 +18,9 @@ bool Physics::CirclevsCircle( Circle a, Circle b )
 	return ( a.radius + b.radius ) < Distance( a.position, b.position );
 }
 
+bool Physics::CirclevsRect( Circle a, Rect b )
+{
+	if(b.max.x < a.radius || b.min.x < a.radius ) return false;
+	if(b.max.y < a.radius || b.min.y < a.radius ) return false;
+	return true;
+}

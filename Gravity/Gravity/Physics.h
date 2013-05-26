@@ -22,8 +22,9 @@ public:
 
 	bool RectvsRect( Rect a, Rect b );
 	bool CirclevsCircle( Circle a, Circle b );
-
-	void ResolveCollision( Object a, Object b );
+	bool CirclevsRect( Circle a, Rect b );
+		
+	//void ResolveCollision( Object a, Object b );
 
 	float Distance( sf::Vector2f a, sf::Vector2f b );
 };
