@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
-using System.Windows.Interop;
-using System.Diagnostics;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using SaltyRatio.Plugins;
 
 namespace SaltyRatio
 {
@@ -14,23 +10,55 @@ namespace SaltyRatio
     /// </summary>
     public partial class MainWindow : Window
     {
+        private volatile bool _active, labelUpdate;
+        Thread update;
+        WebBrowser webBrowser1;
+
+
         public MainWindow()
         {
             InitializeComponent();
-            WebBrowser webBrowser1 = new System.Windows.Forms.WebBrowser();
+            webBrowser1 = new System.Windows.Forms.WebBrowser();
             webBrowser1.ScriptErrorsSuppressed = true;
             host.Child = webBrowser1;
 
             webBrowser1.Navigate(new Uri("http://www.saltybet.com/authenticate?signin=1"));
             webBrowser1.DocumentCompleted += webBrowser1_DocumentCompleted;
-            webBrowser1.Refresh();
-            Console.WriteLine("does this loop");
+
+            _active = false;
+            labelUpdate = false;
+            update = new Thread(saltyUpdate);
+
+        }
+
+        private void saltyUpdate(object obj)
+        {
+            while (_active)
+            {
+                Console.WriteLine("i am active in the background");
+                updateLabel();
+                Thread.Sleep(500);
+
+            }
+        }
+
+        private void updateLabel()
+        {
+            Console.WriteLine(webBrowser1.Document.GetElementById("betstatus"));
         }
 
         private void webBrowser1_DetectedChange(WebBrowser webBrowser1)
         {
+            if (!_active)
+            {
+                _active = true;
+                update.Start();
+            }
+
             if (webBrowser1.Document.GetElementById("betstatus").InnerText != null)
+            {
                 mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
+            }
             else
             {
                 Console.WriteLine("null");
@@ -41,16 +69,20 @@ namespace SaltyRatio
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+
             if (((WebBrowser)sender).Url.ToString() == "http://www.saltybet.com/")
             {
                 webBrowser1_DetectedChange(((WebBrowser)sender));
-                Console.WriteLine("switching to bets");
             }
-            //Check if page is fully loaded or not
+
             if (((WebBrowser)sender).ReadyState != WebBrowserReadyState.Complete)
+            {
                 return;
+            }
             else
+            {
                 waitLogin(((WebBrowser)sender));
+            }
         }
 
         private void waitLogin(WebBrowser webBrowser)
@@ -73,14 +105,7 @@ namespace SaltyRatio
 
                 }
             }
-            webBrowser.DocumentCompleted += webBrowser1_DocumentCompletedMain;
-            
-        }
-        private void webBrowser1_DocumentCompletedMain(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            //Check if page is fully loaded or not
-            if (((WebBrowser)sender).ReadyState != WebBrowserReadyState.Complete)
-                return;
+            webBrowser.DocumentCompleted += webBrowser1_DocumentCompleted;
         }
     }
 }
