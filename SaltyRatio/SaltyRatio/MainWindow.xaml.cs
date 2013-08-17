@@ -36,15 +36,13 @@ namespace SaltyRatio
             while (_active)
             {
                 Console.WriteLine("i am active in the background");
-                updateLabel();
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
 
             }
         }
-
-        private void updateLabel()
+        public void requestStop()
         {
-            Console.WriteLine(webBrowser1.Document.GetElementById("betstatus"));
+            _active = false;
         }
 
         private void webBrowser1_DetectedChange(WebBrowser webBrowser1)
