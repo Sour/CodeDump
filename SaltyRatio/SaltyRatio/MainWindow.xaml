@@ -8,7 +8,7 @@
         <Button Content="Red" Background="Tomato" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="300"/>
         <Button Content="Blue" Background="DodgerBlue" HorizontalAlignment="Left" Margin="962,10,0,0" VerticalAlignment="Top" Width="300" RenderTransformOrigin="-5.333,0.174"/>
         <WindowsFormsHost Name="host" HorizontalAlignment="Left" Height="641" Margin="10,38,0,0" VerticalAlignment="Top" Width="1252"/>
-        <Label Name="mLabel" Content="Label" HorizontalAlignment="Left" Margin="315,10,0,0" VerticalAlignment="Top" Height="23" Width="642"/>
+        <Label Name="mLabel" Content="Initializing" HorizontalAlignment="Left" Margin="315,10,0,0" VerticalAlignment="Top" Height="23" Width="642"/>
 
     </Grid>
 </Window>

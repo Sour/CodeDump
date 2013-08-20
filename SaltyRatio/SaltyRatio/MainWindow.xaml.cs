@@ -1,20 +1,15 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 
 namespace SaltyRatio
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private volatile bool _active, labelUpdate;
-        Thread update;
-        WebBrowser webBrowser1;
-
-
+        public WebBrowser webBrowser1;
         public MainWindow()
         {
             InitializeComponent();
@@ -24,54 +19,11 @@ namespace SaltyRatio
 
             webBrowser1.Navigate(new Uri("http://www.saltybet.com/authenticate?signin=1"));
             webBrowser1.DocumentCompleted += webBrowser1_DocumentCompleted;
-
-            _active = false;
-            labelUpdate = false;
-            update = new Thread(saltyUpdate);
-
-        }
-
-        private void saltyUpdate(object obj)
-        {
-            while (_active)
-            {
-                Console.WriteLine("i am active in the background");
-                Thread.Sleep(1000);
-
-            }
-        }
-        public void requestStop()
-        {
-            _active = false;
-        }
-
-        private void webBrowser1_DetectedChange(WebBrowser webBrowser1)
-        {
-            if (!_active)
-            {
-                _active = true;
-                update.Start();
-            }
-
-            if (webBrowser1.Document.GetElementById("betstatus").InnerText != null)
-            {
-                mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
-            }
-            else
-            {
-                Console.WriteLine("null");
-                mLabel.Content = "";
-            }
         }
 
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-
-            if (((WebBrowser)sender).Url.ToString() == "http://www.saltybet.com/")
-            {
-                webBrowser1_DetectedChange(((WebBrowser)sender));
-            }
 
             if (((WebBrowser)sender).ReadyState != WebBrowserReadyState.Complete)
             {
@@ -81,11 +33,43 @@ namespace SaltyRatio
             {
                 waitLogin(((WebBrowser)sender));
             }
+
+            ((WebBrowser)sender).Document.GetElementById("betstatus").AttachEventHandler("onpropertychange", delegate { statusEventHandler(((WebBrowser)sender).Document.GetElementById("betstatus"), EventArgs.Empty); });
+
+            //foreach (HtmlElement el in webBrowser1.Document.GetElementsByTagName("span"))
+            //{
+            //    el.AttachEventHandler("onpropertychange", delegate { testEventHandler(el, EventArgs.Empty); });
+            //}
+
+            //foreach (HtmlElement el in webBrowser1.Document.GetElementsByTagName("span"))
+            //{
+            //    el.Name = "test";
+            //}
         }
 
-        private void waitLogin(WebBrowser webBrowser)
+        private void statusEventHandler(object sender, EventArgs eventArgs)
         {
-            HtmlElementCollection elements = webBrowser.Document.GetElementsByTagName("input");
+            var temp = (HtmlElement)sender;
+            if (mLabel.Content != webBrowser1.Document.GetElementById("betstatus").InnerText)
+            {
+                mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
+            }
+            Console.WriteLine("testing status check: " + temp.InnerText);
+        }
+
+        //public void testEventHandler(object sender, EventArgs e)
+        //{
+        //    var he = (HtmlElement)sender;
+        //    if (mLabel.Content != webBrowser1.Document.GetElementById("betstatus").InnerText)
+        //    {
+        //        mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
+        //    }
+        //    Console.WriteLine(he.TagName);
+        //}
+
+        private void waitLogin(WebBrowser webBrowser1)
+        {
+            HtmlElementCollection elements = webBrowser1.Document.GetElementsByTagName("input");
             foreach (HtmlElement element in elements)
             {
                 if (element.Name == "email")
@@ -103,7 +87,7 @@ namespace SaltyRatio
 
                 }
             }
-            webBrowser.DocumentCompleted += webBrowser1_DocumentCompleted;
+            webBrowser1.DocumentCompleted += webBrowser1_DocumentCompleted;
         }
     }
 }
