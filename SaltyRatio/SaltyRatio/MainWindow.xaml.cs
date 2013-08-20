@@ -53,8 +53,9 @@ namespace SaltyRatio
             if (mLabel.Content != webBrowser1.Document.GetElementById("betstatus").InnerText)
             {
                 mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
+                oneButton.Content = webBrowser1.Document.GetElementById("p1name").InnerText;
+                twoButton.Content = webBrowser1.Document.GetElementById("p2name").InnerText;
             }
-            Console.WriteLine("testing status check: " + temp.InnerText);
         }
 
         //public void testEventHandler(object sender, EventArgs e)
