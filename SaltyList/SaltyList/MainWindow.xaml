@@ -1,0 +1,40 @@
+﻿<Window x:Class="SaltyList.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Name="myWindow" Title="SaltyList" Height="350" Width="175" Icon="./resources/icon.png" Background="#FF202020">
+    <Grid>
+
+        <TextBox Name="searchContent" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="140" Height="25" Foreground="White" Background="#FF404040" BorderBrush="#00606060" BorderThickness="1"/>
+
+        <Button Content="Search" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="140" Height="25" Click="Button_Click" Background="#FF404040" BorderBrush="#00606060" Foreground="White" BorderThickness="1"/>
+        
+        <TextBox Name="min" HorizontalAlignment="Left" Margin="10,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="61" Height="25" Foreground="White" Background="#FF404040" BorderBrush="#00606060" BorderThickness="1"/>
+        <TextBox Name="max" HorizontalAlignment="Left" Margin="89,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="61" Height="25" Foreground="White" Background="#FF404040" BorderBrush="#00606060" BorderThickness="1"/>
+
+        <CheckBox Name="cbAll" Content="Select All" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" Checked="cbAll_Checked" Unchecked="cbAll_Unchecked" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+        <CheckBox Name="cb1" Content="Bellingham" HorizontalAlignment="Left" Margin="10,168,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+        <CheckBox Name="cb2" Content="Seattle" HorizontalAlignment="Left" Margin="10,193,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+        <CheckBox Name="cb3" Content="Boise" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+        <CheckBox Name="cb4" Content="Spokane" HorizontalAlignment="Left" Margin="10,243,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+        <CheckBox Name="cb5" Content="Portland" HorizontalAlignment="Left" Margin="10,268,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+        <CheckBox Name="cb6" Content="Canada" HorizontalAlignment="Left" Margin="10,293,0,0" VerticalAlignment="Top" Foreground="White" Background="#FF404040" BorderBrush="#FF606060" BorderThickness="1"/>
+
+        <GridSplitter HorizontalAlignment="Left" Height="319" Margin="160,0,0,0" VerticalAlignment="Top" Width="2" BorderThickness="1,1,1,1" BorderBrush="Black"/>
+
+        <Button Name="btnLoad" Content="Load All" HorizontalAlignment="Left" Margin="167,75,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btnLoad_Click"/>
+        <Button Name="btn1" Content="Load" HorizontalAlignment="Left" Margin="167,100,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btn1_Click_1"/>
+        <Button Name="btn2" Content="Load" HorizontalAlignment="Left" Margin="167,125,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btn1_Click_2"/>
+        <Button Name="btn3" Content="Load" HorizontalAlignment="Left" Margin="167,150,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btn1_Click_3"/>
+        <Button Name="btn4" Content="Load" HorizontalAlignment="Left" Margin="167,175,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btn1_Click_4"/>
+        <Button Name="btn5" Content="Load" HorizontalAlignment="Left" Margin="167,200,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btn1_Click_5"/>
+        <Button Name="btn6" Content="Load" HorizontalAlignment="Left" Margin="167,225,0,0" VerticalAlignment="Top" Width="75" Visibility="Hidden" Background="#FF404040" Foreground="White" BorderThickness="1" Click="btn1_Click_6"/>
+
+        <Label Name="lbl1" Content="Label" HorizontalAlignment="Left" Margin="247,100,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="White"/>
+        <Label Name="lbl2" Content="Label" HorizontalAlignment="Left" Margin="247,125,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="White"/>
+        <Label Name="lbl3" Content="Label" HorizontalAlignment="Left" Margin="247,150,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="White"/>
+        <Label Name="lbl4" Content="Label" HorizontalAlignment="Left" Margin="247,175,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="White"/>
+        <Label Name="lbl5" Content="Label" HorizontalAlignment="Left" Margin="247,200,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="White"/>
+        <Label Name="lbl6" Content="Label" HorizontalAlignment="Left" Margin="247,225,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="White"/>
+
+    </Grid>
+</Window>

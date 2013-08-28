@@ -35,16 +35,6 @@ namespace SaltyRatio
             }
 
             ((WebBrowser)sender).Document.GetElementById("betstatus").AttachEventHandler("onpropertychange", delegate { statusEventHandler(((WebBrowser)sender).Document.GetElementById("betstatus"), EventArgs.Empty); });
-
-            //foreach (HtmlElement el in webBrowser1.Document.GetElementsByTagName("span"))
-            //{
-            //    el.AttachEventHandler("onpropertychange", delegate { testEventHandler(el, EventArgs.Empty); });
-            //}
-
-            //foreach (HtmlElement el in webBrowser1.Document.GetElementsByTagName("span"))
-            //{
-            //    el.Name = "test";
-            //}
         }
 
         private void statusEventHandler(object sender, EventArgs eventArgs)
@@ -52,21 +42,16 @@ namespace SaltyRatio
             var temp = (HtmlElement)sender;
             if (mLabel.Content != webBrowser1.Document.GetElementById("betstatus").InnerText)
             {
+                if (mLabel.Content != "Bets are OPEN!" && webBrowser1.Document.GetElementById("betstatus").InnerText == "Bets are OPEN!")
+                {
+                    webBrowser1.Document.GetElementById("wager").SetAttribute("value", "10");
+                    webBrowser1.Document.GetElementById("player1").InvokeMember("click");
+                }
                 mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
                 oneButton.Content = webBrowser1.Document.GetElementById("p1name").InnerText;
                 twoButton.Content = webBrowser1.Document.GetElementById("p2name").InnerText;
             }
         }
-
-        //public void testEventHandler(object sender, EventArgs e)
-        //{
-        //    var he = (HtmlElement)sender;
-        //    if (mLabel.Content != webBrowser1.Document.GetElementById("betstatus").InnerText)
-        //    {
-        //        mLabel.Content = webBrowser1.Document.GetElementById("betstatus").InnerText;
-        //    }
-        //    Console.WriteLine(he.TagName);
-        //}
 
         private void waitLogin(WebBrowser webBrowser1)
         {
@@ -89,6 +74,26 @@ namespace SaltyRatio
                 }
             }
             webBrowser1.DocumentCompleted += webBrowser1_DocumentCompleted;
+        }
+
+        private void oneButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (webBrowser1.Document.GetElementById("betstatus").InnerText == "Bets are OPEN!")
+            {
+                webBrowser1.Document.GetElementById("wager").SetAttribute("value", "10");
+                webBrowser1.Document.GetElementById("player1").InvokeMember("click");
+
+            }
+        }
+
+        private void twoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (webBrowser1.Document.GetElementById("betstatus").InnerText == "Bets are OPEN!")
+            {
+                webBrowser1.Document.GetElementById("wager").SetAttribute("value", "10");
+                webBrowser1.Document.GetElementById("player2").InvokeMember("click");
+
+            }
         }
     }
 }

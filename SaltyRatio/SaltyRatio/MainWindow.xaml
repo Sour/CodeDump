@@ -2,12 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
-        Title="Salty Ratio φ" Height="720" Width="1280"
+        xmlns:yourAlias="clr-namespace:SaltyRatio"
+        Title="Salty Ratio φ" Height="799.417" Width="1280"
         Icon="./Resources/Icon/icon.png">
     <Grid>
-        <Button Name="oneButton" Content="Red" Background="Tomato" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="300"/>
+        <Button Name="oneButton" Content="Red" Background="Tomato" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="300" Click="oneButton_Click"/>
         <Button Name="twoButton" Content="Blue" Background="DodgerBlue" HorizontalAlignment="Left" Margin="962,10,0,0" VerticalAlignment="Top" Width="300" RenderTransformOrigin="-5.333,0.174"/>
-        <WindowsFormsHost Name="host" HorizontalAlignment="Left" Height="641" Margin="10,38,0,0" VerticalAlignment="Top" Width="1252"/>
+        <WindowsFormsHost Name="host" HorizontalAlignment="Left" Margin="10,38,0,10" Width="1252"/>
         <Label Name="mLabel" Content="Initializing" HorizontalAlignment="Left" Margin="315,10,0,0" VerticalAlignment="Top" Height="23" Width="642"/>
 
     </Grid>
