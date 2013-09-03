@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Net;
+﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,10 +19,6 @@ namespace SaltyList
             InitializeComponent();
             initHashTables();
             initControlArrays();
-            
-
-
-
         }
 
         private void initControlArrays()
@@ -49,7 +43,6 @@ namespace SaltyList
             labels[3] = lbl4;
             labels[4] = lbl5;
             labels[5] = lbl6;
-
         }
 
         private void initHashTables()
@@ -87,7 +80,6 @@ namespace SaltyList
             }
             if (count > 0)
                 initSecondaryPane();
-                
         }
 
         private void initSecondaryPane()
@@ -150,7 +142,6 @@ namespace SaltyList
             cb4.IsChecked = true;
             cb5.IsChecked = true;
             cb6.IsChecked = true;
-
         }
 
         private void cbAll_Unchecked(object sender, RoutedEventArgs e)
@@ -179,8 +170,6 @@ namespace SaltyList
             }
             if (temp == 6)
                 myWindow.Width = 175;
-
-
         }
 
         private void btn1_Click_2(object sender, RoutedEventArgs e)

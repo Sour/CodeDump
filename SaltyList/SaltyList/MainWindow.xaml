@@ -2,6 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Name="myWindow" Title="SaltyList" Height="350" Width="175" Icon="./resources/icon.png" Background="#FF202020">
+    <Window.Effect>
+        <DropShadowEffect/>
+    </Window.Effect>
     <Grid>
 
         <TextBox Name="searchContent" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="140" Height="25" Foreground="White" Background="#FF404040" BorderBrush="#00606060" BorderThickness="1"/>
