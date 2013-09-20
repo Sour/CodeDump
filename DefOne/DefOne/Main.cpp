@@ -17,12 +17,26 @@ bool cirToRect ( const RectangleShape &rect, const CircleShape &circle)
 	FloatRect b = circle.getGlobalBounds();
 	return r.intersects(b);
 }
-
-bool rectToRect ( const RectangleShape &rect1, const RectangleShape &rect2)
+bool ballToTopOnly( const RectangleShape &rect, const CircleShape &circle)
 {
-	FloatRect r1 = rect1.getGlobalBounds();
-	FloatRect r2 = rect2.getGlobalBounds();
-	return r1.intersects(r2);
+	FloatRect r = rect.getGlobalBounds();
+	FloatRect b = circle.getGlobalBounds();
+
+
+	float left,right,center;
+
+	left = r.left;
+	right = r.left + r.width;
+	center = b.left + b.width / 2;
+
+	if(center > left && center < right)
+	{
+		if(r.top<b.top + b.height && b.top < r.top + r.height / 2)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 class Game
@@ -36,6 +50,7 @@ private:
 	const static int MAX_FRAMESKIP = 10;
 
 	const static int moveDistance = 20;
+	const static int maxScore = 8;
 
 	RenderWindow _mainWindow;
 
@@ -50,9 +65,11 @@ private:
 	CircleShape ball;
 
 	Font font;
-	Text debug;
+	Text won;
 
-	enum gameState {Initializing, Waiting, Paused, Playing, Exiting};
+	Texture ballTexture,paddle,brick,brickLow;
+
+	enum gameState {Initializing, Waiting, Paused, Playing, Exiting, Won};
 
 	gameState _gameState;
 
@@ -96,6 +113,19 @@ public:
 		if(!font.loadFromFile("Walkway_Black.ttf"))
 			return false;
 
+		if (!ballTexture.loadFromFile("ballBlue.png"))
+			return false;
+
+		if (!paddle.loadFromFile("paddle.png"))
+			return false;
+
+		if (!brick.loadFromFile("brickGrey.png"))
+			return false;
+
+		if (!brickLow.loadFromFile("brickRed.png"))
+			return false;
+
+
 		_mainWindow.create(VideoMode(width,height,32),"Breakout v2");
 		_mainWindow.setFramerateLimit(MAX_FRAMERATE);
 		_mainWindow.setVerticalSyncEnabled(true);
@@ -114,19 +144,21 @@ public:
 
 		player.setSize(Vector2f(60, 10));
 		player.setPosition((width / 2) - (player.getGlobalBounds().width / 2), height - 30);
-		player.setFillColor(Color::White);
+		player.setTexture(&paddle);
 
 		ball.setRadius(10);
 		ball.setFillColor(Color::White);
 		ball.setPosition(Vector2f(
 			(player.getGlobalBounds().left + player.getGlobalBounds().width/2) - ball.getRadius(), 
-			(player.getGlobalBounds().top - ball.getRadius() * 3)
+			(player.getGlobalBounds().top - ball.getGlobalBounds().height -1)
 			)); 
+		ball.setTexture(&ballTexture);
 
-		debug.setPosition(width/2,height/2);
-		debug.setColor(Color::White);
-		debug.setCharacterSize(24);
-		debug.setFont(font);
+		won.setString("You Won!");
+		won.setPosition(won.getGlobalBounds().width / 2 - width / 2,height/2);
+		won.setColor(Color::White);
+		won.setCharacterSize(24);
+		won.setFont(font);
 
 		ballSpeed = Vector2f(-1,-1);
 
@@ -142,14 +174,14 @@ public:
 			if(i != 0)
 			{
 				grid[i].setSize(Vector2f(66.0f,20.0f));
-				grid[i].setFillColor(Color::Red);
+				grid[i].setTexture(&brick);
 				grid[i].setPosition(
 					grid[i-1].getGlobalBounds().left + grid[i-1].getGlobalBounds().width + 10 ,
 					top.getGlobalBounds().top + top.getGlobalBounds().height + 10
 					);
 			}else{
 				grid[i].setSize(Vector2f(66.0f,20.0f));
-				grid[i].setFillColor(Color::Red);
+				grid[i].setTexture(&brick);
 				grid[i].setPosition(
 					left.getGlobalBounds().left + left.getGlobalBounds().width + 10 ,
 					top.getGlobalBounds().top + top.getGlobalBounds().height + 10
@@ -175,9 +207,10 @@ public:
 
 	void updateObjects()
 	{
-		updatePlayer();
-		updateBall();
-		checkCollisions();
+			updatePlayer();
+			updateBall();
+			checkCollisions();
+			checkScore();
 	}
 
 
@@ -204,7 +237,34 @@ public:
 
 	void checkCollisions()
 	{
-		if(cirToRect(top,ball) || cirToRect(player,ball))
+		if(ballToTopOnly(player,ball))
+		{
+			FloatRect p = player.getGlobalBounds();
+			FloatRect b = ball.getGlobalBounds();
+			if(
+				b.top - b.height >= p.top - 1 && 
+				(b.left + b.width / 2) > p.left || 
+				(b.left + b.width / 2) < p.left + p.width
+				)
+			{
+				float speed = sqrtf((ballSpeed.x * ballSpeed.x) + (ballSpeed.y * ballSpeed.y));
+				float angle = ((b.left + b.width / 2) - (p.left + p.width / 2))*1.5f ;
+
+				ballSpeed.x = sinf(angle*(PI/180)) * speed;
+				ballSpeed.y = -abs(cosf(angle*(PI/180)) * speed);
+				cout<<"SPEED: "<<speed<<" ANGLE: "<<angle<<" X: "<<ballSpeed.x<<" Y: "<<ballSpeed.y<<endl<<endl;
+
+				ballSpeed.x *= 1.02f;
+				ballSpeed.y *= 1.02f;
+
+
+				ball.setPosition(b.left,p.top - b.height - 1);
+				updateBall();
+			}
+
+		}
+
+		if(cirToRect(top,ball))
 		{
 			ballSpeed.y = -ballSpeed.y;
 			updateBall();
@@ -218,12 +278,11 @@ public:
 		{
 			if(cirToRect(grid[i],ball))
 			{
-				if(grid[i].getFillColor() == Color::Red)
+				if(grid[i].getTexture() == &brick)
 				{
-					grid[i].setFillColor(Color::Green);
+					grid[i].setTexture(&brickLow);
 					ballSpeed.y *=-1;
 					updateBall();
-					cout<<"test"<<endl;
 				}
 				else
 				{
@@ -233,18 +292,42 @@ public:
 		}
 	}
 
+	void checkScore()
+	{
+		unsigned int score = 0;
+		for(int i=0;i<8;i++)
+		{
+			if(grid[i].getPosition() == Vector2f(-100,-100))
+			{
+				score++;
+			}
+		}
+		if(score == maxScore)
+			_gameState = Won;
+	}
+
 	void display()
 	{
-		_mainWindow.clear();
-		_mainWindow.draw(top);
-		_mainWindow.draw(left);
-		_mainWindow.draw(right);
-		_mainWindow.draw(player);
-		_mainWindow.draw(ball);
-		_mainWindow.draw(debug);
-		for each (RectangleShape rect in grid)
-			_mainWindow.draw(rect);
+		switch(_gameState)
+		{
+		case Playing:
+			_mainWindow.clear();
+			_mainWindow.draw(top);
+			_mainWindow.draw(left);
+			_mainWindow.draw(right);
+			_mainWindow.draw(player);
+			_mainWindow.draw(ball);
+			for each (RectangleShape rect in grid)
+				_mainWindow.draw(rect);
 
+			break;
+
+		case Won:
+			_mainWindow.clear();
+			_mainWindow.draw(won);
+			_mainWindow.display();
+			break;
+		}
 		_mainWindow.display();
 	}
 };

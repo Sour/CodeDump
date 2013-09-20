@@ -24,4 +24,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Ball\ballBlue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ball\ballGreen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ball\ballPurple.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ball\ballRed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
