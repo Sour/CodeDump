@@ -35,9 +35,27 @@ def makeMatrix():
                 fixedMatrix[iy].append(supMatrix.split(',')[iy])
 
 
-"""
+
 def checkForEchelon():
+    global fixedMatrix, matrixSize
+    leadCo = []
+    sizeY = int(matrixSize.split(',')[0])
+    sizeX = int(matrixSize.split(',')[1])
+
+    for iy in range(0,sizeY):
+        for ix in range(0,sizeX):
+            if not 0 == fixedMatrix[0][0]:
+                leadCo.append(iy)
+                leadCo.append(ix)
+                print(iy)
+                print(ix)
+                iy+1
+        
+        
+            
+
     
+"""    
 def checkForReducedEchelon():
     
 def getLeadingCoefficients():
@@ -59,3 +77,4 @@ getMatrixCSV()
 getMatrixSup()
 makeMatrix()
 printMatrix()
+checkForEchelon()
