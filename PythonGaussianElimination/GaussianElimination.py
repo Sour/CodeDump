@@ -22,13 +22,18 @@ def getMatrixSup():
 
 def makeMatrix():
     global matrix, matrixSize, fixedMatrix
-    fixedMatrix = [[] for i in range(int(matrixSize.split(',')[0]) + 1)]
+    
     sizeY = int(matrixSize.split(',')[0])
     sizeX = int(matrixSize.split(',')[1])
+    fixedMatrix = [[] for i in range(sizeY)]
     
     for iy in range(0,sizeY):
         for ix in range(0,sizeX):
             fixedMatrix[iy].append(matrix.split(',')[(iy * sizeX)    + ix])
+            if ix == sizeX-1:
+                fixedMatrix[iy].append("|")
+                fixedMatrix[iy].append(supMatrix.split(',')[iy])
+
 
 """
 def checkForEchelon():
