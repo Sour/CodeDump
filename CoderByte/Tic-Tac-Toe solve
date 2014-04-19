@@ -1,0 +1,13 @@
+var firstRow = true;
+
+while(input = readline()) 
+{
+  if (firstRow) 
+  { 
+  	print("x" + input.substring(1)); 
+  	firstRow = false; 
+  } 
+  else { 
+    print(input); 
+  }
+}       
