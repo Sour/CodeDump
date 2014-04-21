@@ -1,4 +1,4 @@
-
+2
 matrix = "0"
 matrixSize = "0,0"
 supMatrix = "0"
@@ -35,31 +35,44 @@ def makeMatrix():
                 fixedMatrix[iy].append(supMatrix.split(',')[iy])
 
 
-
-def checkForEchelon():
+def getLeadingCoefficients():
     global fixedMatrix, matrixSize
-    leadCo = []
+
     sizeY = int(matrixSize.split(',')[0])
     sizeX = int(matrixSize.split(',')[1])
+    leadCo = []
 
-    for iy in range(0,sizeY):
-        for ix in range(0,sizeX):
-            if not 0 == fixedMatrix[0][0]:
-                leadCo.append(iy)
+    for iy in range(sizeY):
+        for ix in range(sizeX):
+            if not int(fixedMatrix[iy][ix]) == 0:
                 leadCo.append(ix)
-                print(iy)
-                print(ix)
-                iy+1
-        
-        
-            
+                break
 
+    return leadCo
     
-"""    
+def checkForEchelon():
+    sizeY = int(matrixSize.split(',')[0])
+    leadCo = getLeadingCoefficients()
+    for it in range(sizeY-1):
+        if not leadCo[it]+1 == leadCo[it+1]:
+            return False
+    return True
+
+
 def checkForReducedEchelon():
-    
-def getLeadingCoefficients():
-    
+    global fixedMatrix, matrixSize
+
+    sizeY = int(matrixSize.split(',')[0])
+    sizeX = int(matrixSize.split(',')[1])
+    if(checkForEchelon()):
+        for iy in range(sizeY):
+            for ix in range(sizeX):
+                if int(fixedMatrix[iy][ix]) < 0 or int(fixedMatrix[iy][ix]) > 1:
+                    return False
+
+        return True
+    return False
+"""
 def swapRows():
     
 def multiplyRow():
@@ -77,4 +90,12 @@ getMatrixCSV()
 getMatrixSup()
 makeMatrix()
 printMatrix()
-checkForEchelon()
+if checkForEchelon():
+    print("Echelon")
+else:
+    print("Not Echelon")
+
+if checkForReducedEchelon():
+    print("Reduced Echelon")
+else:
+    print("Not Reduced Echelon")
