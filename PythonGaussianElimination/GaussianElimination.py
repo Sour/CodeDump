@@ -72,12 +72,23 @@ def checkForReducedEchelon():
 
         return True
     return False
-"""
-def swapRows():
+
+def swapRows(first, second):
+    global fixedMatrix, matrixSize
+    sizeX = int(matrixSize.split(',')[1])
+
+    fixedMatrix[first-1], fixedMatrix[second-1] = fixedMatrix[second-1], fixedMatrix[first-1]
+
+def multiplyRow(mut, row):
+    global fixedMatrix, matrixSize
+
+    sizeX = int(matrixSize.split(',')[1])
+    for addX in range(sizeX):
+        fixedMatrix[row-1][addX] = (int(fixedMatrix[row-1][addX]) * int(mut))
+        print(fixedMatrix)
     
-def multiplyRow():
-    
-def scalarRow():
+"""   
+def scalarRow(mut, row):
 
 """
 def printMatrix():
@@ -99,3 +110,5 @@ if checkForReducedEchelon():
     print("Reduced Echelon")
 else:
     print("Not Reduced Echelon")
+swapRows(1, 3)
+multiplyRow(2,1)
