@@ -12,7 +12,7 @@ fixedMatrix = []
 def getMatrixSize():
     global matrixSize
     matrixSize = input("Enter Matrix Size: ")
-
+    
 def getMatrixCSV():
     global matrixSize, matrix
     
@@ -39,7 +39,6 @@ def makeMatrix():
                 fixedMatrix[iy].append("|")
                 fixedMatrix[iy].append(supMatrix.split(',')[iy])
 
-
 def getLeadingCoefficients():
     global fixedMatrix, matrixSize
 
@@ -49,7 +48,7 @@ def getLeadingCoefficients():
 
     for iy in range(sizeY):
         for ix in range(sizeX):
-            if not int(fixedMatrix[iy][ix]) == 0:
+            if not float(fixedMatrix[iy][ix]) == 0:
                 leadCo.append(ix)
                 break
 
@@ -105,47 +104,86 @@ def printMatrix():
     for it in range(int(matrixSize.split(',')[1])):
         print(str(fixedMatrix[it]))
     print(" ")
+
+def solveForEchelon():
+    global matrixSize
+
+    sizeY = int(matrixSize.split(',')[0])
+    sizeX = int(matrixSize.split(',')[1])
+
+    if sizeX == sizeY:
+        if sizeX == 2:
+            eliminateOne()
+            return
+        elif sizeX == 3:
+            eliminateTwo()
+            if checkForEchelon():
+                print("Matrix is now in Echelon form\n")
+            else:
+                print("Matrix is not in Echelon form\n")
+                solveForEchelon()
+            return
+        elif sizeX == 4:
+            eliminateThree()
+            return
+    else:
+        print("nothanks\n")
+
+def solveForReducedEchelon():
+    global matrixSize
+
+    sizeY = int(matrixSize.split(',')[0])
+    sizeX = int(matrixSize.split(',')[1])
+
+    if sizeX == sizeY:
+        if sizeX == 2:
+            eliminateOne()
+            return
+        elif sizeX == 3:
+            eliminateTwoReduced()
+            if checkForReducedEchelon():
+                print("Matrix is now in Reduced Echelon form\n")
+            else:
+                print("Matrix is not in Reduced Echelon form\n")
+                solveForReducedEchelon()
+            return
+        elif sizeX == 4:
+            eliminateThree()
+            return
+    else:
+        print("nothanks")
     
-        
+
+def eliminateTwo():
+    global fixedMatrix
+    
+    scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
+    scalarRow(-(float(fixedMatrix[2][0]) / float(fixedMatrix[0][0])),3,1)
+    scalarRow(-(float(fixedMatrix[2][1]) / float(fixedMatrix[1][1])),3,2)
+
+def eliminateTwoReduced():
+    global fixedMatrix
+    
+    scalarRow(-(float(fixedMatrix[1][2]) / float(fixedMatrix[2][2])),2,3)
+    scalarRow(-(float(fixedMatrix[0][2]) / float(fixedMatrix[2][2])),1,3)
+    multiplyRow(1 / float(fixedMatrix[1][1]),2)
+    multiplyRow(1 / float(fixedMatrix[2][2]),3)
+    scalarRow(-(float(fixedMatrix[0][1]) / float(fixedMatrix[1][1])),1,2)
+    multiplyRow(1 / float(fixedMatrix[0][0]),1)
+    
+
+    
+    
+"""
+def eliminateOne():
+def eliminateThree():
+"""
 
 getMatrixSize()
 getMatrixCSV()
 getMatrixSup()
 makeMatrix()
 printMatrix()
-if checkForEchelon():
-    print("Echelon")
-else:
-    print("Not Echelon")
-
-if checkForReducedEchelon():
-    print("Reduced Echelon")
-else:
-    print("Not Reduced Echelon")
-
-scalarRow(1.5,2,1)
-scalarRow(1,3,1)
-
-printMatrix()
-
-scalarRow(-4,3,2)
-
-printMatrix()
-
-scalarRow(.5,2,3)
-scalarRow(-1,1,3)
-
-printMatrix()
-
-multiplyRow(2,2)
-multiplyRow(-1,3)
-
-printMatrix()
-
-scalarRow(-1,1,2)
-multiplyRow(.5,1)
-
-printMatrix()
 
 if checkForEchelon():
     print("Echelon")
@@ -153,6 +191,12 @@ else:
     print("Not Echelon")
 
 if checkForReducedEchelon():
-    print("Reduced Echelon")
+    print("Reduced Echelon\n")
 else:
-    print("Not Reduced Echelon")
+    print("Not Reduced Echelon\n")
+
+solveForEchelon()
+printMatrix()
+
+solveForReducedEchelon()
+printMatrix()
