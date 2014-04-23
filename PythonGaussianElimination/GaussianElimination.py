@@ -1,4 +1,9 @@
-2
+"""
+MatrixSize: 3,3
+MatrixCSV:  2,1,-1,-3,-1,2,-2,1,2
+SupMatrix:  8,-11,-3
+"""
+
 matrix = "0"
 matrixSize = "0,0"
 supMatrix = "0"
@@ -84,15 +89,22 @@ def multiplyRow(mut, row):
 
     sizeX = int(matrixSize.split(',')[1])
     for addX in range(sizeX):
-        fixedMatrix[row-1][addX] = (int(fixedMatrix[row-1][addX]) * int(mut))
-        print(fixedMatrix)
+        fixedMatrix[row-1][addX] = (float(fixedMatrix[row-1][addX]) * float(mut))
+    fixedMatrix[row-1][4] = (float(fixedMatrix[row-1][4]) * float(mut))
     
-"""   
-def scalarRow(mut, row):
 
-"""
+def scalarRow(mut, row1, row2):
+    global fixedMatrix, matrixSize
+
+    sizeX = int(matrixSize.split(',')[1])
+    for it in range(sizeX):
+        fixedMatrix[row1-1][it] = float(fixedMatrix[row1-1][it]) + (float(mut) * float(fixedMatrix[row2-1][it]))
+    fixedMatrix[row1-1][4] = float(fixedMatrix[row1-1][4]) + (float(mut) * float(fixedMatrix[row2-1][4]))
+
 def printMatrix():
-    print(fixedMatrix)
+    for it in range(int(matrixSize.split(',')[1])):
+        print(str(fixedMatrix[it]))
+    print(" ")
     
         
 
@@ -110,5 +122,37 @@ if checkForReducedEchelon():
     print("Reduced Echelon")
 else:
     print("Not Reduced Echelon")
-swapRows(1, 3)
-multiplyRow(2,1)
+
+scalarRow(1.5,2,1)
+scalarRow(1,3,1)
+
+printMatrix()
+
+scalarRow(-4,3,2)
+
+printMatrix()
+
+scalarRow(.5,2,3)
+scalarRow(-1,1,3)
+
+printMatrix()
+
+multiplyRow(2,2)
+multiplyRow(-1,3)
+
+printMatrix()
+
+scalarRow(-1,1,2)
+multiplyRow(.5,1)
+
+printMatrix()
+
+if checkForEchelon():
+    print("Echelon")
+else:
+    print("Not Echelon")
+
+if checkForReducedEchelon():
+    print("Reduced Echelon")
+else:
+    print("Not Reduced Echelon")
