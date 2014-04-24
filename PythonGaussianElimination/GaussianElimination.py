@@ -89,7 +89,7 @@ def multiplyRow(mut, row):
     sizeX = int(matrixSize.split(',')[1])
     for addX in range(sizeX):
         fixedMatrix[row-1][addX] = (float(fixedMatrix[row-1][addX]) * float(mut))
-    fixedMatrix[row-1][4] = (float(fixedMatrix[row-1][4]) * float(mut))
+    fixedMatrix[row-1][sizeX+1] = (float(fixedMatrix[row-1][sizeX+1]) * float(mut))
     
 
 def scalarRow(mut, row1, row2):
@@ -98,7 +98,7 @@ def scalarRow(mut, row1, row2):
     sizeX = int(matrixSize.split(',')[1])
     for it in range(sizeX):
         fixedMatrix[row1-1][it] = float(fixedMatrix[row1-1][it]) + (float(mut) * float(fixedMatrix[row2-1][it]))
-    fixedMatrix[row1-1][4] = float(fixedMatrix[row1-1][4]) + (float(mut) * float(fixedMatrix[row2-1][4]))
+    fixedMatrix[row1-1][sizeX+1] = float(fixedMatrix[row1-1][sizeX+1]) + (float(mut) * float(fixedMatrix[row2-1][sizeX+1]))
 
 def printMatrix():
     for it in range(int(matrixSize.split(',')[1])):
@@ -137,7 +137,7 @@ def solveForReducedEchelon():
 
     if sizeX == sizeY:
         if sizeX == 2:
-            eliminateOne()
+            eliminateOneReduced()
             return
         elif sizeX == 3:
             eliminateTwoReduced()
@@ -153,12 +153,24 @@ def solveForReducedEchelon():
     else:
         print("nothanks")
     
+def eliminateOne():
+    global fixedMatrix
 
+    scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
+    
+def eliminateOneReduced():
+    global fixedMatrix
+
+    scalarRow(-(float(fixedMatrix[0][1]) / float(fixedMatrix[1][1])),1,2)
+    multiplyRow(1 / float(fixedMatrix[0][0]),1)
+    multiplyRow(1 / float(fixedMatrix[1][1]),2)
+    
 def eliminateTwo():
     global fixedMatrix
     
     scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
     scalarRow(-(float(fixedMatrix[2][0]) / float(fixedMatrix[0][0])),3,1)
+
     scalarRow(-(float(fixedMatrix[2][1]) / float(fixedMatrix[1][1])),3,2)
 
 def eliminateTwoReduced():
@@ -166,18 +178,28 @@ def eliminateTwoReduced():
     
     scalarRow(-(float(fixedMatrix[1][2]) / float(fixedMatrix[2][2])),2,3)
     scalarRow(-(float(fixedMatrix[0][2]) / float(fixedMatrix[2][2])),1,3)
+
     multiplyRow(1 / float(fixedMatrix[1][1]),2)
     multiplyRow(1 / float(fixedMatrix[2][2]),3)
+
     scalarRow(-(float(fixedMatrix[0][1]) / float(fixedMatrix[1][1])),1,2)
     multiplyRow(1 / float(fixedMatrix[0][0]),1)
     
-
-    
-    
-"""
-def eliminateOne():
 def eliminateThree():
-"""
+    global fixedMatrix
+
+    scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
+    scalarRow(-(float(fixedMatrix[2][0]) / float(fixedMatrix[0][0])),3,1)
+    scalarRow(-(float(fixedMatrix[3][0]) / float(fixedMatrix[0][0])),4,1)
+
+    scalarRow(-(float(fixedMatrix[1][1]) / float(fixedMatrix[0][1])),2,1)
+    scalarRow(-(float(fixedMatrix[2][1]) / float(fixedMatrix[0][1])),3,1)
+    scalarRow(-(float(fixedMatrix[3][1]) / float(fixedMatrix[0][1])),4,1)
+
+    scalarRow(-(float(fixedMatrix[2][2]) / float(fixedMatrix[1][2])),3,2)
+    scalarRow(-(float(fixedMatrix[3][2]) / float(fixedMatrix[1][2])),4,2)
+"""def eliminateThreeReduced():"""
+
 
 getMatrixSize()
 getMatrixCSV()
