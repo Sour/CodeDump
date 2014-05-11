@@ -1,3 +1,6 @@
+"""
+2,1,-1,8,-3,-1,2,-11,-2,1,2,-3
+"""
 matrix = ""
 matrixSize = ""
 fixedMatrix = []
@@ -36,11 +39,9 @@ def getLeadingCoefficients():
         for ix in range(sizeX):
             if fixedMatrix[iy][ix] != 0:
                 leadCo.append(ix)
-                print(leadCo)
                 break
             elif ix == sizeX:
                 leadCo.append(ix)
-                print(leadCo)
                 break
 
     return leadCo
@@ -48,7 +49,7 @@ def getLeadingCoefficients():
 def checkForEchelon():
     sizeY = int(matrixSize.split(',')[0])
     leadCo = getLeadingCoefficients()
-    for it in range(sizeY):
+    for it in range(sizeY -1):
         if not leadCo[it]+1 == leadCo[it+1]:
             return False
     return True
@@ -92,102 +93,24 @@ def printMatrix():
         print(str(fixedMatrix[it]))
     print(" ")
 
-def solveForEchelon():
-    global matrixSize
-
+def scalingReduction(ix, iy, it):
     sizeY = int(matrixSize.split(',')[0])
     sizeX = int(matrixSize.split(',')[1]) - 1
 
-    if sizeX == sizeY:
-        if sizeX == 2:
-            eliminateOne()
-            return
-        elif sizeX == 3:
-            eliminateTwo()
-            printMatrix()
-            if checkForEchelon():
-                print("Matrix is now in Echelon form\n")
-            else:
-                print("Matrix is not in Echelon form\n")
-                solveForEchelon()
-            return
-        elif sizeX == 4:
-            eliminateThree()
-            return
+    if ix >= (sizeX - 1) and iy >= (sizeY - 1) and it > 2:
+        print("Reduction Complete")
+        return
     else:
-        print("nothanks\n")
 
-def solveForReducedEchelon():
-    global matrixSize
-
-    sizeY = int(matrixSize.split(',')[0])
-    sizeX = int(matrixSize.split(',')[1]) - 1
-
-    if sizeX == sizeY:
-        if sizeX == 2:
-            eliminateOneReduced()
-            return
-        elif sizeX == 3:
-            eliminateTwoReduced()
-            if checkForReducedEchelon():
-                print("Matrix is now in Reduced Echelon form\n")
-            else:
-                print("Matrix is not in Reduced Echelon form\n")
-                solveForReducedEchelon()
-            return
-        elif sizeX == 4:
-            eliminateThree()
-            return
-    else:
-        print("nothanks")
+        print("iy: " + str(iy+1))
+        print("ix: " + str(ix))
+        print("it: " + str(it))
+        ix = ix+1
+        iy = iy+1
+        it = it+1
     
-def eliminateOne():
-    global fixedMatrix
-
-    scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
+    scalingReduction(ix, iy, it)
     
-def eliminateOneReduced():
-    global fixedMatrix
-
-    scalarRow(-(float(fixedMatrix[0][1]) / float(fixedMatrix[1][1])),1,2)
-    multiplyRow(1 / float(fixedMatrix[0][0]),1)
-    multiplyRow(1 / float(fixedMatrix[1][1]),2)
-    
-def eliminateTwo():
-    global fixedMatrix
-    
-    scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
-    scalarRow(-(float(fixedMatrix[2][0]) / float(fixedMatrix[0][0])),3,1)
-
-    scalarRow(-(float(fixedMatrix[2][1]) / float(fixedMatrix[1][1])),3,2)
-
-def eliminateTwoReduced():
-    global fixedMatrix
-    
-    scalarRow(-(float(fixedMatrix[1][2]) / float(fixedMatrix[2][2])),2,3)
-    scalarRow(-(float(fixedMatrix[0][2]) / float(fixedMatrix[2][2])),1,3)
-
-    multiplyRow(1 / float(fixedMatrix[1][1]),2)
-    multiplyRow(1 / float(fixedMatrix[2][2]),3)
-
-    scalarRow(-(float(fixedMatrix[0][1]) / float(fixedMatrix[1][1])),1,2)
-    multiplyRow(1 / float(fixedMatrix[0][0]),1)
-    
-def eliminateThree():
-    global fixedMatrix
-
-    scalarRow(-(float(fixedMatrix[1][0]) / float(fixedMatrix[0][0])),2,1)
-    scalarRow(-(float(fixedMatrix[2][0]) / float(fixedMatrix[0][0])),3,1)
-    scalarRow(-(float(fixedMatrix[3][0]) / float(fixedMatrix[0][0])),4,1)
-    printMatrix()
-    scalarRow(-(float(fixedMatrix[2][1]) / float(fixedMatrix[1][1])),3,2)
-    scalarRow(-(float(fixedMatrix[3][1]) / float(fixedMatrix[1][1])),4,2)
-    printMatrix()
-    scalarRow(-(float(fixedMatrix[3][2]) / float(fixedMatrix[2][2])),4,3)
-    
-"""
-def eliminateThreeReduced():
-"""
 
 
 getMatrixSize()
@@ -205,8 +128,6 @@ if checkForReducedEchelon():
 else:
     print("Not Reduced Echelon\n")
     
+scalingReduction(0, 0, 0)
 printMatrix()
-solveForEchelon()
 
-printMatrix()
-solveForReducedEchelon()
